@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legionella Dossier — Content Review Dashboard</title>
+  <style>
+    :root {
+      --navy: #1E3A5F;
+      --navy-light: #2a4e7f;
+      --navy-dark: #152e4d;
+      --blue-accent: #6EC6F0;
+      --blue-light: #e8f4fb;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --gray-600: #475569;
+      --gray-800: #1e293b;
+      --green: #10b981;
+      --green-light: #d1fae5;
+      --red: #ef4444;
+      --red-light: #fee2e2;
+      --orange: #f59e0b;
+      --orange-light: #fef3c7;
+      --purple: #8b5cf6;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--gray-100);
+      color: var(--gray-800);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────────── */
+    header {
+      background: var(--navy);
+      color: var(--white);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      background: var(--blue-accent);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    header p {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .config-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+    .status-dot.connected { background: #10b981; }
+
+    /* ── CONFIG BANNER ──────────────────────────────────────── */
+    #config-banner {
+      background: var(--orange);
+      color: var(--white);
+      padding: 10px 32px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #config-banner.hidden { display: none; }
+
+    /* ── CONFIG PANEL ───────────────────────────────────────── */
+    #config-panel {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 24px 32px;
+    }
+
+    #config-panel.hidden { display: none; }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .config-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .config-field input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: monospace;
+      background: var(--gray-50);
+    }
+
+    .config-field input:focus {
+      outline: none;
+      border-color: var(--blue-accent);
+      box-shadow: 0 0 0 3px rgba(110,198,240,0.2);
+    }
+
+    /* ── MAIN LAYOUT ────────────────────────────────────────── */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    /* ── CONTROLS BAR ───────────────────────────────────────── */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .controls h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--gray-200);
+      border-radius: 8px;
+      padding: 3px;
+    }
+
+    .filter-tab {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: transparent;
+      color: var(--gray-600);
+      transition: all 0.15s;
+    }
+
+    .filter-tab.active {
+      background: var(--white);
+      color: var(--navy);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .btn-primary:hover { background: var(--navy-light); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--navy);
+      border: 1px solid var(--gray-200);
+    }
+    .btn-outline:hover { background: var(--gray-50); }
+
+    /* ── STATS BAR ──────────────────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 16px 20px;
+      min-width: 120px;
+      flex: 1;
+    }
+
+    .stat-card .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .stat-card .stat-label {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── POST CARDS ─────────────────────────────────────────── */
+    .posts-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .post-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+
+    .post-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .post-card.approved { border-left: 4px solid var(--green); }
+    .post-card.rejected { border-left: 4px solid var(--red); }
+    .post-card.pending { border-left: 4px solid var(--orange); }
+    .post-card.scheduled { border-left: 4px solid var(--blue-accent); }
+    .post-card.published { border-left: 4px solid var(--purple); }
+
+    /* ── POST HEADER ────────────────────────────────────────── */
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px 12px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .post-number {
+      background: var(--navy);
+      color: var(--white);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .post-pillar {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pillar-education { background: #dbeafe; color: #1d4ed8; }
+    .pillar-product { background: #d1fae5; color: #065f46; }
+    .pillar-case_study { background: #ede9fe; color: #5b21b6; }
+    .pillar-industry_news { background: #fef3c7; color: #92400e; }
+    .pillar-thought_leadership { background: #fce7f3; color: #9d174d; }
+
+    .post-format {
+      font-size: 11px;
+      color: var(--gray-400);
+      background: var(--gray-100);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .post-status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-draft { background: var(--gray-100); color: var(--gray-600); }
+    .status-ready_for_review { background: var(--orange-light); color: #92400e; }
+    .status-approved { background: var(--green-light); color: #065f46; }
+    .status-rejected { background: var(--red-light); color: #991b1b; }
+    .status-scheduled { background: var(--blue-light); color: #1d4ed8; }
+    .status-published { background: #ede9fe; color: #5b21b6; }
+
+    /* ── POST BODY ──────────────────────────────────────────── */
+    .post-body {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 0;
+    }
+
+    @media (max-width: 900px) {
+      .post-body { grid-template-columns: 1fr; }
+    }
+
+    /* Left: copy */
+    .post-copy-section {
+      padding: 20px 24px;
+      border-right: 1px solid var(--gray-100);
+    }
+
+    .hook-line {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+      line-height: 1.4;
+      font-style: italic;
+    }
+
+    .copy-text {
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: var(--gray-600);
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .copy-text.expanded {
+      max-height: none;
+    }
+
+    .expand-btn {
+      margin-top: 8px;
+      background: none;
+      border: none;
+      color: var(--blue-accent);
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .hashtags {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .hashtag {
+      font-size: 12px;
+      color: var(--blue-accent);
+      background: var(--blue-light);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* Right: visual */
+    .post-visual-section {
+      padding: 20px;
+      background: var(--gray-50);
+    }
+
+    .visual-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gray-400);
+      margin-bottom: 10px;
+    }
+
+    .visual-placeholder {
+      background: var(--navy);
+      border-radius: 12px;
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visual-placeholder .vp-logo {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      opacity: 0.5;
+      margin-bottom: 8px;
+    }
+
+    .visual-placeholder .vp-title {
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      padding: 0 16px;
+      line-height: 1.3;
+    }
+
+    .visual-placeholder .vp-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: var(--blue-accent);
+      color: var(--navy);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 4px;
+    }
+
+    .visual-image {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .visual-link {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--blue-accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .visual-link:hover { text-decoration: underline; }
+
+    /* ── REJECTION NOTE ─────────────────────────────────────── */
+    .rejection-note-display {
+      margin: 0 24px 12px;
+      background: var(--red-light);
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #991b1b;
+    }
+
+    .rejection-note-display strong {
+      font-weight: 700;
+    }
+
+    /* ── ACTIONS ────────────────────────────────────────────── */
+    .post-actions {
+      padding: 16px 24px;
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .notes-field {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .notes-field label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .notes-field textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: var(--font);
+      resize: vertical;
+      min-height: 40px;
+      max-height: 100px;
+      background: var(--gray-50);
+    }
+
+    .notes-field textarea:focus {
+      outline: none;
+      border-color: var(--blue-accent);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .btn-approve {
+      background: var(--green);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .btn-approve:hover { background: #059669; transform: translateY(-1px); }
+
+    .btn-reject {
+      background: var(--red);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+    }
+    .btn-reject:hover { background: #dc2626; transform: translateY(-1px); }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* ── EMPTY STATE ────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 40px;
+      color: var(--gray-400);
+    }
+
+    .empty-state h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--gray-600);
+    }
+
+    /* ── TOAST ──────────────────────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--gray-800);
+      color: var(--white);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 999;
+      max-width: 320px;
+    }
+
+    #toast.show { opacity: 1; }
+    #toast.success { background: var(--green); }
+    #toast.error { background: var(--red); }
+
+    /* ── LOADING ────────────────────────────────────────────── */
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: var(--gray-400);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--gray-200);
+      border-top-color: var(--blue-accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="logo-badge">LD</div>
+    <div>
+      <h1>Content Review Dashboard</h1>
+      <p>Legionella Dossier — LinkedIn Marketing System</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="config-badge">
+      <div class="status-dot" id="db-dot"></div>
+      <span id="db-status">Not connected</span>
+    </div>
+    <button class="btn btn-outline" onclick="toggleConfig()" style="color:white;border-color:rgba(255,255,255,0.3)">⚙ Config</button>
+    <button class="btn btn-primary" onclick="loadDrafts()" style="background:var(--blue-accent);color:var(--navy)">↺ Refresh</button>
+  </div>
+</header>
+
+<!-- CONFIG BANNER -->
+<div id="config-banner">
+  ⚠️ <strong>Setup required:</strong> Enter your Supabase URL and anon key below to connect to your data.
+</div>
+
+<!-- CONFIG PANEL -->
+<div id="config-panel">
+  <strong style="font-size:15px;color:var(--navy)">Database Configuration</strong>
+  <p style="font-size:13px;color:var(--gray-600);margin-top:4px">Your credentials are stored in your browser only and never sent anywhere except Supabase.</p>
+  <div class="config-grid">
+    <div class="config-field">
+      <label>Supabase Project URL</label>
+      <input type="text" id="supabase-url" placeholder="https://xxxx.supabase.co" oninput="saveConfig()" />
+    </div>
+    <div class="config-field">
+      <label>Supabase Anon Key</label>
+      <input type="password" id="supabase-key" placeholder="eyJ..." oninput="saveConfig()" />
+    </div>
+  </div>
+  <div style="margin-top:16px;display:flex;gap:10px">
+    <button class="btn btn-primary" onclick="testConnection()">Test Connection</button>
+    <button class="btn btn-outline" onclick="toggleConfig()">Close</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div>
+      <h2 id="week-label">This Week's Content</h2>
+      <p style="font-size:13px;color:var(--gray-400);margin-top:2px" id="week-subtitle">Review and approve posts before they go live</p>
+    </div>
+    <div class="controls-right">
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterPosts('all', this)">All</button>
+        <button class="filter-tab" onclick="filterPosts('ready_for_review', this)">Needs Review</button>
+        <button class="filter-tab" onclick="filterPosts('approved', this)">Approved</button>
+        <button class="filter-tab" onclick="filterPosts('rejected', this)">Rejected</button>
+        <button class="filter-tab" onclick="filterPosts('scheduled', this)">Scheduled</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-total">–</div>
+      <div class="stat-label">Total posts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-pending" style="color:var(--orange)">–</div>
+      <div class="stat-label">Needs review</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-approved" style="color:var(--green)">–</div>
+      <div class="stat-label">Approved</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-rejected" style="color:var(--red)">–</div>
+      <div class="stat-label">Rejected</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-scheduled" style="color:var(--blue-accent)">–</div>
+      <div class="stat-label">Scheduled</div>
+    </div>
+  </div>
+
+  <!-- POSTS -->
+  <div class="posts-grid" id="posts-container">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Connect to Supabase to load your content drafts</p>
+    </div>
+  </div>
+</main>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────
+
+let SUPABASE_URL = '';
+let SUPABASE_KEY = '';
+let allPosts = [];
+let currentFilter = 'all';
+
+function loadConfig() {
+  SUPABASE_URL = localStorage.getItem('ld_supabase_url') || '';
+  SUPABASE_KEY = localStorage.getItem('ld_supabase_key') || '';
+  document.getElementById('supabase-url').value = SUPABASE_URL;
+  document.getElementById('supabase-key').value = SUPABASE_KEY;
+
+  if (SUPABASE_URL && SUPABASE_KEY && !SUPABASE_URL.includes('YOUR_')) {
+    document.getElementById('config-panel').classList.add('hidden');
+    document.getElementById('config-banner').classList.add('hidden');
+    loadDrafts();
+  }
+}
+
+function saveConfig() {
+  SUPABASE_URL = document.getElementById('supabase-url').value.trim();
+  SUPABASE_KEY = document.getElementById('supabase-key').value.trim();
+  localStorage.setItem('ld_supabase_url', SUPABASE_URL);
+  localStorage.setItem('ld_supabase_key', SUPABASE_KEY);
+}
+
+function toggleConfig() {
+  document.getElementById('config-panel').classList.toggle('hidden');
+}
+
+async function testConnection() {
+  saveConfig();
+  try {
+    const res = await sbFetch('brand_config', 'select=id&limit=1');
+    if (res.ok) {
+      setDbStatus(true);
+      toast('✅ Connected to Supabase!', 'success');
+      document.getElementById('config-panel').classList.add('hidden');
+      document.getElementById('config-banner').classList.add('hidden');
+      loadDrafts();
+    } else {
+      throw new Error(`HTTP ${res.status}`);
+    }
+  } catch (e) {
+    setDbStatus(false);
+    toast(`Connection failed: ${e.message}`, 'error');
+  }
+}
+
+function setDbStatus(connected) {
+  const dot = document.getElementById('db-dot');
+  const label = document.getElementById('db-status');
+  dot.className = 'status-dot' + (connected ? ' connected' : '');
+  label.textContent = connected ? 'Connected' : 'Not connected';
+}
+
+// ── SUPABASE REQUESTS ────────────────────────────────────────────────────
+
+async function sbFetch(table, params = '') {
+  const url = `${SUPABASE_URL}/rest/v1/${table}?${params}`;
+  return fetch(url, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    }
+  });
+}
+
+async function sbPatch(table, id, body) {
+  const url = `${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`;
+  return fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(body)
+  });
+}
+
+async function sbInsert(table, body) {
+  const url = `${SUPABASE_URL}/rest/v1/${table}`;
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: JSON.stringify(body)
+  });
+}
+
+// ── LOAD DRAFTS ──────────────────────────────────────────────────────────
+
+async function loadDrafts() {
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    document.getElementById('posts-container').innerHTML = `
+      <div class="empty-state">
+        <h3>No connection</h3>
+        <p>Enter your Supabase credentials above to load your content drafts.</p>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('posts-container').innerHTML = `
+    <div class="loading"><div class="spinner"></div><p>Loading drafts...</p></div>`;
+
+  try {
+    // Get current week and next week's drafts
+    const today = new Date();
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - today.getDay() + 1);
+    const weekStr = monday.toISOString().split('T')[0];
+
+    const res = await sbFetch('content_drafts',
+      `select=*&order=post_number.asc&week_commencing=gte.${weekStr}`);
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    allPosts = await res.json();
+    setDbStatus(true);
+
+    // Update week label
+    const weekLabel = monday.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('week-label').textContent = `Week commencing ${weekLabel}`;
+    document.getElementById('week-subtitle').textContent = `${allPosts.length} post draft${allPosts.length !== 1 ? 's' : ''} — review before publishing`;
+
+    updateStats();
+    renderPosts(filterByStatus(allPosts, currentFilter));
+
+  } catch (e) {
+    setDbStatus(false);
+    document.getElementById('posts-container').innerHTML = `
+      <div class="empty-state">
+        <h3>Failed to load drafts</h3>
+        <p>${e.message}</p>
+      </div>`;
+  }
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────
+
+function filterByStatus(posts, filter) {
+  if (filter === 'all') return posts;
+  return posts.filter(p => {
+    if (filter === 'ready_for_review') return ['draft', 'awaiting_visual', 'ready_for_review'].includes(p.status);
+    return p.status === filter;
+  });
+}
+
+function filterPosts(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderPosts(filterByStatus(allPosts, filter));
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = allPosts.length;
+  document.getElementById('stat-pending').textContent = allPosts.filter(p => ['draft','awaiting_visual','ready_for_review'].includes(p.status)).length;
+  document.getElementById('stat-approved').textContent = allPosts.filter(p => p.status === 'approved').length;
+  document.getElementById('stat-rejected').textContent = allPosts.filter(p => p.status === 'rejected').length;
+  document.getElementById('stat-scheduled').textContent = allPosts.filter(p => ['scheduled','published'].includes(p.status)).length;
+}
+
+function pillarClass(pillar) {
+  return `pillar-${pillar}`;
+}
+
+function pillarLabel(pillar) {
+  const labels = {
+    education: '🎓 Education',
+    product: '🚀 Product',
+    case_study: '⭐ Case Study',
+    industry_news: '📰 Industry News',
+    thought_leadership: '💡 Thought Leadership'
+  };
+  return labels[pillar] || pillar;
+}
+
+function formatLabel(fmt) {
+  const labels = {
+    long_text: '📝 Long Text',
+    carousel: '🎠 Carousel',
+    single_image: '🖼 Single Image',
+    video_script: '🎬 Video Script'
+  };
+  return labels[fmt] || fmt;
+}
+
+function statusLabel(status) {
+  const labels = {
+    draft: 'Draft',
+    awaiting_visual: 'Awaiting Visual',
+    ready_for_review: 'Ready for Review',
+    approved: '✓ Approved',
+    rejected: '✕ Rejected',
+    scheduled: '⏰ Scheduled',
+    published: '🟢 Published'
+  };
+  return labels[status] || status;
+}
+
+function renderPosts(posts) {
+  const container = document.getElementById('posts-container');
+
+  if (posts.length === 0) {
+    const messages = {
+      all: 'No posts yet. Run Agent 1 to generate this week\'s content calendar.',
+      ready_for_review: '✅ All posts have been reviewed!',
+      approved: 'No approved posts yet.',
+      rejected: 'No rejected posts.',
+      scheduled: 'No scheduled posts yet.'
+    };
+    container.innerHTML = `
+      <div class="empty-state">
+        <h3>${messages[currentFilter] || 'No posts found'}</h3>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = posts.map(post => renderPostCard(post)).join('');
+}
+
+function renderPostCard(post) {
+  const hasVisual = post.visual_url && !post.visual_url.includes('YOUR_');
+  const isActionable = ['draft', 'awaiting_visual', 'ready_for_review'].includes(post.status);
+  const isRejected = post.status === 'rejected';
+
+  const copyLines = (post.copy_text || '').split('\\n').join('\n');
+  const copyPreview = copyLines.length > 300 ? copyLines.slice(0, 300) + '...' : copyLines;
+  const needsExpand = copyLines.length > 300;
+
+  return `
+<div class="post-card ${isRejected ? 'rejected' : isActionable ? 'pending' : post.status}" id="card-${post.id}">
+  <div class="post-header">
+    <div class="post-meta">
+      <div class="post-number">${post.post_number}</div>
+      <span class="post-pillar ${pillarClass(post.pillar)}">${pillarLabel(post.pillar)}</span>
+      <span class="post-format">${formatLabel(post.format_type)}</span>
+    </div>
+    <span class="post-status-badge status-${post.status}">${statusLabel(post.status)}</span>
+  </div>
+
+  ${isRejected && post.bas_notes ? `
+  <div class="rejection-note-display">
+    <strong>Rejection note:</strong> ${escHtml(post.bas_notes)}
+  </div>` : ''}
+
+  <div class="post-body">
+    <div class="post-copy-section">
+      <div class="hook-line">"${escHtml(post.hook_line || '')}"</div>
+      <div class="copy-text" id="copy-${post.id}">${escHtml(copyPreview)}</div>
+      ${needsExpand ? `<button class="expand-btn" onclick="expandCopy('${post.id}', this)" data-full="${escAttr(copyLines)}">Show full post ↓</button>` : ''}
+      <div class="hashtags">
+        ${(post.hashtags || []).map(h => `<span class="hashtag">${escHtml(h)}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="post-visual-section">
+      <div class="visual-label">Visual Asset</div>
+      ${hasVisual
+        ? `<img src="${escHtml(post.visual_url)}" class="visual-image" alt="Post visual" onerror="this.style.display='none'" />
+           <a href="${escHtml(post.visual_url)}" target="_blank" class="visual-link">↗ Open in Canva / Drive</a>`
+        : `<div class="visual-placeholder">
+             <div class="vp-logo">LEGIONELLA DOSSIER</div>
+             <div class="vp-title">${escHtml((post.hook_line || '').slice(0, 60))}</div>
+             <div class="vp-badge">${(post.format_type || '').replace('_', ' ').toUpperCase()}</div>
+           </div>
+           <p style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:center">Visual pending from Agent 2</p>`
+      }
+    </div>
+  </div>
+
+  ${isActionable || isRejected ? `
+  <div class="post-actions">
+    <div class="notes-field">
+      <label>Notes for Bas (optional — saved if you reject)</label>
+      <textarea id="notes-${post.id}" placeholder="e.g. Too product-focused, needs more educational angle. Try a stat-led hook."></textarea>
+    </div>
+    <div class="action-btns">
+      <button class="btn-approve" onclick="approvePost('${post.id}')">✓ Approve</button>
+      <button class="btn-reject" onclick="rejectPost('${post.id}')">✕ Reject</button>
+    </div>
+  </div>` : `
+  <div class="post-actions" style="padding:12px 24px;">
+    <span style="font-size:12px;color:var(--gray-400)">
+      ${post.status === 'scheduled' ? '⏰ Scheduled for LinkedIn via HubSpot' :
+        post.status === 'published' ? '🟢 Published on LinkedIn' :
+        ''}
+    </span>
+    ${post.status !== 'published' ? `<button class="btn-sm" onclick="undoAction('${post.id}')">↩ Undo</button>` : ''}
+  </div>`}
+</div>`;
+}
+
+// ── APPROVE / REJECT ─────────────────────────────────────────────────────
+
+async function approvePost(id) {
+  const notes = document.getElementById(`notes-${id}`)?.value || '';
+
+  try {
+    const res = await sbPatch('content_drafts', id, {
+      status: 'approved',
+      bas_notes: notes || null
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    toast('✅ Post approved! Agent 3 will schedule it.', 'success');
+    await loadDrafts();
+
+    // Trigger Agent 3 (if running locally via the API endpoint)
+    triggerAgent3(id);
+
+  } catch (e) {
+    toast(`Error approving post: ${e.message}`, 'error');
+  }
+}
+
+async function rejectPost(id) {
+  const notes = document.getElementById(`notes-${id}`)?.value || '';
+
+  if (!notes) {
+    toast('Please add a rejection note so Agent 1 can learn from it.', 'error');
+    document.getElementById(`notes-${id}`).focus();
+    return;
+  }
+
+  try {
+    // Update draft status
+    const res = await sbPatch('content_drafts', id, {
+      status: 'rejected',
+      bas_notes: notes
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    // Save to rejections table for Agent 1 to read
+    const post = allPosts.find(p => p.id === id);
+    if (post) {
+      await sbInsert('rejections', {
+        draft_id: id,
+        reason: notes,
+        topic: post.hook_line,
+        pillar: post.pillar,
+        format_type: post.format_type,
+        bas_notes: notes
+      });
+    }
+
+    toast('Post rejected. Agent 1 will learn from this next week.', 'error');
+    await loadDrafts();
+
+  } catch (e) {
+    toast(`Error rejecting post: ${e.message}`, 'error');
+  }
+}
+
+async function undoAction(id) {
+  try {
+    await sbPatch('content_drafts', id, { status: 'ready_for_review', bas_notes: null });
+    toast('Post reset to "Ready for Review"');
+    await loadDrafts();
+  } catch (e) {
+    toast(`Error: ${e.message}`, 'error');
+  }
+}
+
+// ── TRIGGER AGENT 3 ──────────────────────────────────────────────────────
+
+function triggerAgent3(draftId) {
+  // This calls Agent 3 via the local runner script.
+  // In production, this would hit a webhook URL or API endpoint.
+  console.log(`[Agent 3] Triggered for draft ID: ${draftId}`);
+  // Webhook call can be added here once Agent 3 has a local server running
+}
+
+// ── EXPAND COPY ──────────────────────────────────────────────────────────
+
+function expandCopy(id, btn) {
+  const el = document.getElementById(`copy-${id}`);
+  if (btn.dataset.expanded) {
+    el.textContent = el.textContent.slice(0, 300) + '...';
+    btn.textContent = 'Show full post ↓';
+    delete btn.dataset.expanded;
+  } else {
+    el.textContent = btn.dataset.full;
+    btn.textContent = 'Show less ↑';
+    btn.dataset.expanded = '1';
+  }
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────
+
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => { el.className = ''; }, 3500);
+}
+
+// ── UTILS ────────────────────────────────────────────────────────────────
+
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function escAttr(str) {
+  return String(str || '').replace(/"/g, '&quot;');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────
+
+loadConfig();
+</script>
+</body>
+</html>
