@@ -757,14 +757,17 @@
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────────────
 
+const DEFAULT_SUPABASE_URL = 'https://rlgfoqfusntfdkutnapx.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZ2ZvcWZ1c250ZmRrdXRuYXB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0NTI2MjEsImV4cCI6MjA5MDAyODYyMX0.FTatSQy1qtugUwsMKEI6HvTlFGlXuTP2kTV_d_IiNCk';
+
 let SUPABASE_URL = '';
 let SUPABASE_KEY = '';
 let allPosts = [];
 let currentFilter = 'all';
 
 function loadConfig() {
-  SUPABASE_URL = localStorage.getItem('ld_supabase_url') || '';
-  SUPABASE_KEY = localStorage.getItem('ld_supabase_key') || '';
+  SUPABASE_URL = localStorage.getItem('ld_supabase_url') || DEFAULT_SUPABASE_URL;
+  SUPABASE_KEY = localStorage.getItem('ld_supabase_key') || DEFAULT_SUPABASE_KEY;
   document.getElementById('supabase-url').value = SUPABASE_URL;
   document.getElementById('supabase-key').value = SUPABASE_KEY;
 
