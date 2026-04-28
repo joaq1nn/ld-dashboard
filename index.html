@@ -328,11 +328,11 @@
       letter-spacing: 0.5px;
     }
 
-    .pillar-education { background: #dbeafe; color: #1d4ed8; }
-    .pillar-product { background: #d1fae5; color: #065f46; }
-    .pillar-case_study { background: #ede9fe; color: #5b21b6; }
-    .pillar-industry_news { background: #fef3c7; color: #92400e; }
-    .pillar-thought_leadership { background: #fce7f3; color: #9d174d; }
+    .pillar-regulatory_compliance          { background: #e0e7ff; color: #3730a3; }
+    .pillar-educational_thought_leadership { background: #dbeafe; color: #1d4ed8; }
+    .pillar-product_angle                  { background: #d1fae5; color: #065f46; }
+    .pillar-case_study                     { background: #ede9fe; color: #5b21b6; }
+    .pillar-industry_news                  { background: #fef3c7; color: #92400e; }
 
     .post-format {
       font-size: 11px;
@@ -651,6 +651,241 @@
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── EDIT MODE ──────────────────────────────────────────── */
+    .post-card.editing { border-left: 4px solid var(--blue-accent); }
+
+    .editable-input,
+    .editable-textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: var(--font);
+      background: var(--white);
+    }
+    .editable-input:focus,
+    .editable-textarea:focus {
+      outline: none;
+      border-color: var(--blue-accent);
+      box-shadow: 0 0 0 3px rgba(110,198,240,0.2);
+    }
+    .editable-textarea { resize: vertical; min-height: 60px; }
+    .editable-textarea.copy-text-edit { min-height: 200px; line-height: 1.5; }
+    .editable-textarea.visual-brief-edit { min-height: 80px; }
+    .editable-textarea.hashtags-edit { min-height: 100px; font-family: monospace; }
+
+    .editable-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin: 14px 0 4px;
+    }
+    .editable-label:first-child { margin-top: 0; }
+
+    .char-counter {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 2px;
+      text-align: right;
+    }
+    .char-counter.warn { color: var(--orange); }
+    .char-counter.error { color: var(--red); }
+
+    .validation-msg {
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 4px;
+    }
+
+    /* ── EDITED CHIP ────────────────────────────────────────── */
+    .edited-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--gray-600);
+      background: var(--blue-light);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin: 0 24px 12px;
+    }
+    .edited-chip-icon { color: var(--blue-accent); font-weight: 700; }
+
+    /* ── EDIT BUTTONS ───────────────────────────────────────── */
+    .btn-edit-toggle {
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-edit-toggle:hover { background: var(--gray-200); }
+
+    .btn-save-edits {
+      background: var(--blue-accent);
+      color: var(--navy);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-save-edits:hover:not(:disabled) { background: #5ab8e6; }
+    .btn-save-edits:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-revert-edits {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-revert-edits:hover { background: var(--red-light); }
+
+    .btn-cancel-edit {
+      background: transparent;
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-view-original {
+      background: transparent;
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* ── SLIDES & POLL DISPLAY ──────────────────────────────── */
+    .slides-display, .poll-options-display {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--gray-50);
+      border-radius: 8px;
+    }
+
+    .slide-row, .poll-row {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-200);
+      font-size: 13px;
+    }
+    .slide-row:last-child, .poll-row:last-child { border-bottom: none; }
+
+    .slide-meta {
+      font-size: 11px;
+      color: var(--gray-400);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .slide-meta-tag {
+      display: inline-block;
+      padding: 1px 6px;
+      background: var(--blue-light);
+      color: var(--blue-accent);
+      border-radius: 4px;
+      font-weight: 700;
+      margin-right: 6px;
+      font-size: 10px;
+    }
+
+    .slide-text {
+      color: var(--gray-800);
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 14px 0 6px;
+    }
+
+    .slide-edit-block { margin-bottom: 12px; }
+
+    /* ── MODAL ──────────────────────────────────────────────── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-backdrop.hidden { display: none; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 460px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .modal p {
+      font-size: 14px;
+      color: var(--gray-600);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .modal-btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .modal-btn-primary { background: var(--green); color: var(--white); }
+    .modal-btn-primary:hover { background: #059669; }
+    .modal-btn-secondary { background: var(--orange); color: var(--white); }
+    .modal-btn-secondary:hover { background: #d97706; }
+    .modal-btn-cancel {
+      background: var(--gray-100);
+      color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+    }
   </style>
 </head>
 <body>
@@ -691,6 +926,10 @@
     <div class="config-field">
       <label>Supabase Anon Key</label>
       <input type="password" id="supabase-key" placeholder="eyJ..." oninput="saveConfig()" />
+    </div>
+    <div class="config-field">
+      <label>Editor Email (used to attribute edits)</label>
+      <input type="email" id="editor-email" placeholder="bas@legionelladossier.com" oninput="saveConfig()" />
     </div>
   </div>
   <div style="margin-top:16px;display:flex;gap:10px">
@@ -751,6 +990,19 @@
   </div>
 </main>
 
+<!-- APPROVAL MODAL (unsaved edits + approve flow) -->
+<div id="approval-modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h3>Unsaved edits</h3>
+    <p>Post #<span id="approval-modal-postnum">?</span> has unsaved edits. Save them before approving, discard them, or cancel?</p>
+    <div class="modal-buttons">
+      <button class="modal-btn modal-btn-cancel" onclick="closeApprovalModal()">Cancel</button>
+      <button class="modal-btn modal-btn-secondary" onclick="modalDiscardAndApprove()">Discard &amp; Approve</button>
+      <button class="modal-btn modal-btn-primary" onclick="modalSaveAndApprove()">Save &amp; Approve</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast"></div>
 
@@ -770,6 +1022,7 @@ function loadConfig() {
   SUPABASE_KEY = localStorage.getItem('ld_supabase_key') || DEFAULT_SUPABASE_KEY;
   document.getElementById('supabase-url').value = SUPABASE_URL;
   document.getElementById('supabase-key').value = SUPABASE_KEY;
+  document.getElementById('editor-email').value = localStorage.getItem('ld_editor_email') || '';
 
   if (SUPABASE_URL && SUPABASE_KEY && !SUPABASE_URL.includes('YOUR_')) {
     document.getElementById('config-panel').classList.add('hidden');
@@ -783,6 +1036,8 @@ function saveConfig() {
   SUPABASE_KEY = document.getElementById('supabase-key').value.trim();
   localStorage.setItem('ld_supabase_url', SUPABASE_URL);
   localStorage.setItem('ld_supabase_key', SUPABASE_KEY);
+  const email = document.getElementById('editor-email').value.trim();
+  if (email) localStorage.setItem('ld_editor_email', email);
 }
 
 function toggleConfig() {
@@ -856,6 +1111,264 @@ async function sbInsert(table, body) {
     body: JSON.stringify(body)
   });
 }
+
+// ── EDIT STATE ──────────────────────────────────────────────────────────
+
+const EDITABLE_FIELDS = [
+  'copy_text', 'hook_line', 'hashtags',
+  'visual_brief', 'poll_options', 'slides',
+];
+
+// editStates[postId] = { mode: 'view'|'edit', edits: {field: value}, viewOriginal: bool }
+let editStates = {};
+
+function effective(post) {
+  const out = {...post};
+  for (const f of EDITABLE_FIELDS) {
+    if (post[`bas_edited_${f}`] != null) out[f] = post[`bas_edited_${f}`];
+  }
+  return out;
+}
+
+function getEditorEmail() {
+  let email = (localStorage.getItem('ld_editor_email') || '').trim();
+  if (!email) {
+    email = (prompt("First time editing — what's your email? (used to track who edited what):") || '').trim();
+    if (!email) return null;
+    localStorage.setItem('ld_editor_email', email);
+    const f = document.getElementById('editor-email');
+    if (f) f.value = email;
+  }
+  return email;
+}
+
+function ensureState(id) {
+  if (!editStates[id]) {
+    editStates[id] = { mode: 'view', edits: {}, viewOriginal: false };
+  }
+  return editStates[id];
+}
+
+function enterEditMode(id) {
+  ensureState(id).mode = 'edit';
+  editStates[id].edits = {};
+  editStates[id].viewOriginal = false;
+  rerenderCard(id);
+}
+
+function cancelEdit(id) {
+  delete editStates[id];
+  rerenderCard(id);
+}
+
+function setEdit(id, field, value) {
+  ensureState(id);
+  editStates[id].edits[field] = value;
+  refreshSaveButton(id);
+  refreshCharCounters(id);
+}
+
+function setPollOption(id, idx, value) {
+  ensureState(id);
+  const post = allPosts.find(p => p.id === id);
+  const eff = effective(post);
+  const current = editStates[id].edits.poll_options ?? [...(eff.poll_options || [])];
+  while (current.length <= idx) current.push('');
+  current[idx] = value;
+  // Trim trailing empties so length validation reflects intent
+  while (current.length && !current[current.length - 1]) current.pop();
+  editStates[id].edits.poll_options = current;
+  refreshSaveButton(id);
+}
+
+function setSlideText(id, idx, value) {
+  ensureState(id);
+  const post = allPosts.find(p => p.id === id);
+  const eff = effective(post);
+  const current = editStates[id].edits.slides ?? (eff.slides || []).map(s => ({...s}));
+  if (current[idx]) {
+    current[idx] = {...current[idx], text: value};
+  }
+  editStates[id].edits.slides = current;
+  refreshSaveButton(id);
+  const cc = document.getElementById(`cc-slide-${id}-${idx}`);
+  if (cc) {
+    const len = value.length;
+    cc.textContent = `${len} / 600`;
+    cc.className = `char-counter${len > 600 ? ' error' : len < 10 ? ' warn' : ''}`;
+  }
+}
+
+function isDirty(id) {
+  return !!(editStates[id] && Object.keys(editStates[id].edits).length > 0);
+}
+
+function validateEdits(id) {
+  if (!editStates[id]) return { ok: true, errors: [] };
+  const errors = [];
+  const e = editStates[id].edits;
+
+  if ('hook_line' in e && (e.hook_line || '').length > 200) {
+    errors.push('Hook line over 200 chars');
+  }
+
+  if ('hashtags' in e) {
+    const tags = e.hashtags || [];
+    if (tags.length < 3 || tags.length > 5) errors.push('Hashtags must be 3–5 (one per line)');
+    if (tags.some(t => !t.startsWith('#'))) errors.push('Each hashtag must start with #');
+  }
+
+  if ('poll_options' in e) {
+    const opts = e.poll_options || [];
+    if (opts.length < 2 || opts.length > 4) errors.push('Poll must have 2–4 options');
+    if (opts.some(o => !(o || '').trim())) errors.push('Poll options cannot be empty');
+    if (opts.some(o => (o || '').length > 30)) errors.push('Each poll option ≤30 chars');
+  }
+
+  if ('slides' in e) {
+    const slides = e.slides || [];
+    for (const s of slides) {
+      const len = (s.text || '').length;
+      if (len < 10) { errors.push(`Slide ${s.slide_number}: text too short (≥10 chars)`); break; }
+      if (len > 600) { errors.push(`Slide ${s.slide_number}: text too long (≤600 chars)`); break; }
+    }
+  }
+
+  return { ok: errors.length === 0, errors };
+}
+
+async function saveEdits(id) {
+  const v = validateEdits(id);
+  if (!v.ok) { toast('Fix validation errors first.', 'error'); return; }
+  if (!isDirty(id)) return;
+
+  const email = getEditorEmail();
+  if (!email) { toast('Editor email required to save.', 'error'); return; }
+
+  const e = editStates[id].edits;
+  const body = {
+    edited_at: new Date().toISOString(),
+    edited_by: email,
+  };
+  for (const [k, val] of Object.entries(e)) {
+    body[`bas_edited_${k}`] = val;
+  }
+
+  try {
+    const res = await sbPatch('content_drafts', id, body);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const updated = (await res.json())[0];
+    const idx = allPosts.findIndex(p => p.id === id);
+    if (idx >= 0) allPosts[idx] = updated;
+    delete editStates[id];
+    rerenderCard(id);
+    toast('✓ Edits saved.', 'success');
+  } catch (err) {
+    toast(`Error saving edits: ${err.message}`, 'error');
+  }
+}
+
+async function revertEdits(id) {
+  if (!confirm("Revert all edits to the agent's original?")) return;
+  const body = {
+    bas_edited_copy_text: null,
+    bas_edited_hook_line: null,
+    bas_edited_hashtags: null,
+    bas_edited_visual_brief: null,
+    bas_edited_poll_options: null,
+    bas_edited_slides: null,
+    edited_at: null,
+    edited_by: null,
+  };
+  try {
+    const res = await sbPatch('content_drafts', id, body);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const updated = (await res.json())[0];
+    const idx = allPosts.findIndex(p => p.id === id);
+    if (idx >= 0) allPosts[idx] = updated;
+    delete editStates[id];
+    rerenderCard(id);
+    toast('Edits reverted.', 'success');
+  } catch (err) {
+    toast(`Error reverting: ${err.message}`, 'error');
+  }
+}
+
+function toggleViewOriginal(id) {
+  ensureState(id).viewOriginal = !editStates[id].viewOriginal;
+  rerenderCard(id);
+}
+
+function rerenderCard(id) {
+  const post = allPosts.find(p => p.id === id);
+  if (!post) return;
+  const card = document.getElementById(`card-${id}`);
+  if (!card) return;
+  const tmp = document.createElement('div');
+  tmp.innerHTML = renderPostCard(post).trim();
+  card.replaceWith(tmp.firstElementChild);
+}
+
+function refreshSaveButton(id) {
+  const card = document.getElementById(`card-${id}`);
+  if (!card) return;
+  const btn = card.querySelector('.btn-save-edits');
+  if (!btn) return;
+  const v = validateEdits(id);
+  btn.disabled = !(isDirty(id) && v.ok);
+  const errEl = card.querySelector('.validation-msg');
+  if (errEl) errEl.textContent = v.errors.length ? v.errors.join(' · ') : '';
+}
+
+function refreshCharCounters(id) {
+  const card = document.getElementById(`card-${id}`);
+  if (!card || !editStates[id]) return;
+  const e = editStates[id].edits;
+  if ('hook_line' in e) {
+    const cc = card.querySelector(`#cc-hook-${id}`);
+    if (cc) {
+      const len = (e.hook_line || '').length;
+      cc.textContent = `${len} / 200`;
+      cc.className = `char-counter${len > 200 ? ' error' : ''}`;
+    }
+  }
+  if ('copy_text' in e) {
+    const cc = card.querySelector(`#cc-copy-${id}`);
+    if (cc) cc.textContent = `${(e.copy_text || '').length} chars`;
+  }
+}
+
+// ── APPROVAL MODAL ──────────────────────────────────────────────────────
+
+function showApprovalModal(id) {
+  const m = document.getElementById('approval-modal');
+  const post = allPosts.find(p => p.id === id);
+  document.getElementById('approval-modal-postnum').textContent = post?.post_number ?? '?';
+  m.dataset.targetId = id;
+  m.classList.remove('hidden');
+}
+
+function closeApprovalModal() {
+  document.getElementById('approval-modal').classList.add('hidden');
+}
+
+async function modalSaveAndApprove() {
+  const id = document.getElementById('approval-modal').dataset.targetId;
+  closeApprovalModal();
+  await saveEdits(id);
+  await approvePost(id, { skipDirtyCheck: true });
+}
+
+async function modalDiscardAndApprove() {
+  const id = document.getElementById('approval-modal').dataset.targetId;
+  closeApprovalModal();
+  delete editStates[id];
+  await approvePost(id, { skipDirtyCheck: true });
+}
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeApprovalModal();
+});
 
 // ── LOAD DRAFTS ──────────────────────────────────────────────────────────
 
@@ -935,21 +1448,22 @@ function pillarClass(pillar) {
 
 function pillarLabel(pillar) {
   const labels = {
-    education: '🎓 Education',
-    product: '🚀 Product',
-    case_study: '⭐ Case Study',
-    industry_news: '📰 Industry News',
-    thought_leadership: '💡 Thought Leadership'
+    regulatory_compliance:           '⚖ Regulatory',
+    industry_news:                   '📰 Industry News',
+    educational_thought_leadership:  '🎓 Educational',
+    product_angle:                   '🚀 Product',
+    case_study:                      '⭐ Case Study',
   };
   return labels[pillar] || pillar;
 }
 
 function formatLabel(fmt) {
   const labels = {
-    long_text: '📝 Long Text',
-    carousel: '🎠 Carousel',
-    single_image: '🖼 Single Image',
-    video_script: '🎬 Video Script'
+    quote:           '💬 Quote',
+    infographic:     '📊 Infographic',
+    product_mockup:  '📱 Product Mockup',
+    poll:            '🗳 Poll',
+    news_carousel:   '📰 News Carousel',
   };
   return labels[fmt] || fmt;
 }
@@ -989,16 +1503,23 @@ function renderPosts(posts) {
 }
 
 function renderPostCard(post) {
+  const state = editStates[post.id] || { mode: 'view', edits: {}, viewOriginal: false };
+  const isEditing = state.mode === 'edit';
+  const showOriginal = !isEditing && state.viewOriginal;
+  const display = showOriginal ? post : effective(post);
+
   const hasVisual = post.visual_url && !post.visual_url.includes('YOUR_');
   const isActionable = ['draft', 'awaiting_visual', 'ready_for_review'].includes(post.status);
   const isRejected = post.status === 'rejected';
+  const hasEdits = post.edited_at != null;
 
-  const copyLines = (post.copy_text || '').split('\\n').join('\n');
-  const copyPreview = copyLines.length > 300 ? copyLines.slice(0, 300) + '...' : copyLines;
-  const needsExpand = copyLines.length > 300;
+  const cardClass = isEditing ? 'editing' :
+                    isRejected ? 'rejected' :
+                    isActionable ? 'pending' :
+                    post.status;
 
   return `
-<div class="post-card ${isRejected ? 'rejected' : isActionable ? 'pending' : post.status}" id="card-${post.id}">
+<div class="post-card ${cardClass}" id="card-${post.id}">
   <div class="post-header">
     <div class="post-meta">
       <div class="post-number">${post.post_number}</div>
@@ -1008,19 +1529,46 @@ function renderPostCard(post) {
     <span class="post-status-badge status-${post.status}">${statusLabel(post.status)}</span>
   </div>
 
+  ${hasEdits && !isEditing ? renderEditedChip(post, showOriginal) : ''}
   ${isRejected && post.bas_notes ? `
   <div class="rejection-note-display">
     <strong>Rejection note:</strong> ${escHtml(post.bas_notes)}
   </div>` : ''}
 
+  ${isEditing ? renderEditForm(post, state) : renderDisplayBody(post, display, hasVisual)}
+
+  ${renderActions(post, state, isActionable, isRejected, hasEdits)}
+</div>`;
+}
+
+function renderEditedChip(post, showOriginal) {
+  const ts = post.edited_at ? new Date(post.edited_at) : null;
+  const time = ts
+    ? ts.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+    : '';
+  const editor = post.edited_by || 'unknown';
+  const tag = showOriginal ? ' (showing original)' : '';
+  return `<div class="edited-chip"><span class="edited-chip-icon">✎</span> Edited by ${escHtml(editor)} · ${time}${tag}</div>`;
+}
+
+function renderDisplayBody(post, display, hasVisual) {
+  const copyLines = (display.copy_text || '').split('\\n').join('\n');
+  const copyPreview = copyLines.length > 300 ? copyLines.slice(0, 300) + '...' : copyLines;
+  const needsExpand = copyLines.length > 300;
+  const isCarousel = post.format_type === 'news_carousel';
+  const isPoll = post.format_type === 'poll';
+
+  return `
   <div class="post-body">
     <div class="post-copy-section">
-      <div class="hook-line">"${escHtml(post.hook_line || '')}"</div>
+      <div class="hook-line">"${escHtml(display.hook_line || '')}"</div>
       <div class="copy-text" id="copy-${post.id}">${escHtml(copyPreview)}</div>
       ${needsExpand ? `<button class="expand-btn" onclick="expandCopy('${post.id}', this)" data-full="${escAttr(copyLines)}">Show full post ↓</button>` : ''}
       <div class="hashtags">
-        ${(post.hashtags || []).map(h => `<span class="hashtag">${escHtml(h)}</span>`).join('')}
+        ${(display.hashtags || []).map(h => `<span class="hashtag">${escHtml(h)}</span>`).join('')}
       </div>
+      ${isCarousel ? renderSlidesDisplay(display.slides) : ''}
+      ${isPoll ? renderPollDisplay(display.poll_options) : ''}
     </div>
 
     <div class="post-visual-section">
@@ -1030,39 +1578,180 @@ function renderPostCard(post) {
            <a href="${escHtml(post.visual_url)}" target="_blank" class="visual-link">↗ Open in Canva / Drive</a>`
         : `<div class="visual-placeholder">
              <div class="vp-logo">LEGIONELLA DOSSIER</div>
-             <div class="vp-title">${escHtml((post.hook_line || '').slice(0, 60))}</div>
+             <div class="vp-title">${escHtml((display.hook_line || '').slice(0, 60))}</div>
              <div class="vp-badge">${(post.format_type || '').replace('_', ' ').toUpperCase()}</div>
            </div>
            <p style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:center">Visual pending from Agent 2</p>`
       }
+      ${display.visual_brief ? `
+        <div class="section-label">Visual brief</div>
+        <div class="copy-text" style="font-size:12px;max-height:160px">${escHtml(display.visual_brief)}</div>` : ''}
     </div>
-  </div>
+  </div>`;
+}
 
-  ${isActionable || isRejected ? `
-  <div class="post-actions">
-    <div class="notes-field">
-      <label>Notes for Bas (optional — saved if you reject)</label>
-      <textarea id="notes-${post.id}" placeholder="e.g. Too product-focused, needs more educational angle. Try a stat-led hook."></textarea>
+function renderSlidesDisplay(slides) {
+  if (!slides || !slides.length) return '';
+  return `
+    <div class="section-label">Slides (${slides.length})</div>
+    <div class="slides-display">
+      ${slides.map(s => `
+        <div class="slide-row">
+          <div class="slide-meta">
+            <span class="slide-meta-tag">#${s.slide_number}</span>
+            <span class="slide-meta-tag">${escHtml(s.role || '')}</span>
+          </div>
+          <div class="slide-text">${escHtml(s.text || '')}</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderPollDisplay(options) {
+  if (!options || !options.length) return '';
+  return `
+    <div class="section-label">Poll options</div>
+    <div class="poll-options-display">
+      ${options.map((o, i) => `<div class="poll-row"><strong>${i + 1}.</strong> ${escHtml(o)}</div>`).join('')}
+    </div>`;
+}
+
+function renderEditForm(post, state) {
+  const eff = effective(post);
+  const merged = {...eff, ...state.edits};
+  const isCarousel = post.format_type === 'news_carousel';
+  const isPoll = post.format_type === 'poll';
+
+  const hookLen = (merged.hook_line || '').length;
+  const copyLen = (merged.copy_text || '').length;
+
+  return `
+  <div class="post-body" style="grid-template-columns: 1fr;">
+    <div class="post-copy-section" style="border-right: none;">
+      <label class="editable-label">Hook line (max 200 chars)</label>
+      <input type="text" class="editable-input" maxlength="240"
+             value="${escAttr(merged.hook_line || '')}"
+             oninput="setEdit('${post.id}', 'hook_line', this.value)" />
+      <div class="char-counter${hookLen > 200 ? ' error' : ''}" id="cc-hook-${post.id}">${hookLen} / 200</div>
+
+      <label class="editable-label">Copy text (full post)</label>
+      <textarea class="editable-textarea copy-text-edit"
+                oninput="setEdit('${post.id}', 'copy_text', this.value)"
+                >${escHtml(merged.copy_text || '')}</textarea>
+      <div class="char-counter" id="cc-copy-${post.id}">${copyLen} chars</div>
+
+      <label class="editable-label">Hashtags (one per line, 3–5, each starts with #)</label>
+      <textarea class="editable-textarea hashtags-edit"
+                oninput="setEdit('${post.id}', 'hashtags', this.value.split('\\n').map(s => s.trim()).filter(Boolean))"
+                >${escHtml((merged.hashtags || []).join('\n'))}</textarea>
+
+      <label class="editable-label">Visual brief</label>
+      <textarea class="editable-textarea visual-brief-edit"
+                oninput="setEdit('${post.id}', 'visual_brief', this.value)"
+                >${escHtml(merged.visual_brief || '')}</textarea>
+
+      ${isPoll ? renderPollEdit(post, merged) : ''}
+      ${isCarousel ? renderSlidesEdit(post, merged) : ''}
     </div>
-    <div class="action-btns">
-      <button class="btn-approve" onclick="approvePost('${post.id}')">✓ Approve</button>
-      <button class="btn-reject" onclick="rejectPost('${post.id}')">✕ Reject</button>
-    </div>
-  </div>` : `
+  </div>`;
+}
+
+function renderPollEdit(post, merged) {
+  const opts = merged.poll_options || [];
+  const slots = [];
+  for (let i = 0; i < 4; i++) {
+    const v = opts[i] || '';
+    slots.push(`
+      <input type="text" class="editable-input" maxlength="30"
+             placeholder="Option ${i + 1}${i >= 2 ? ' (optional)' : ''}"
+             value="${escAttr(v)}"
+             style="margin-bottom: 6px;"
+             oninput="setPollOption('${post.id}', ${i}, this.value)" />`);
+  }
+  return `<label class="editable-label">Poll options (2–4, each ≤30 chars)</label>${slots.join('')}`;
+}
+
+function renderSlidesEdit(post, merged) {
+  const slides = merged.slides || [];
+  if (!slides.length) {
+    return `<div class="validation-msg">⚠ This news_carousel post has no slides — likely a data integrity issue. Reject and regenerate.</div>`;
+  }
+  return `
+    <label class="editable-label">Slides (10–600 chars each)</label>
+    ${slides.map((s, i) => {
+      const len = (s.text || '').length;
+      const ccClass = len > 600 ? ' error' : len < 10 ? ' warn' : '';
+      return `
+      <div class="slide-edit-block">
+        <div class="slide-meta">
+          <span class="slide-meta-tag">#${s.slide_number}</span>
+          <span class="slide-meta-tag">${escHtml(s.role || '')}</span>
+        </div>
+        <textarea class="editable-textarea"
+                  oninput="setSlideText('${post.id}', ${i}, this.value)"
+                  >${escHtml(s.text || '')}</textarea>
+        <div class="char-counter${ccClass}" id="cc-slide-${post.id}-${i}">${len} / 600</div>
+      </div>`;
+    }).join('')}`;
+}
+
+function renderActions(post, state, isActionable, isRejected, hasEdits) {
+  const isEditing = state.mode === 'edit';
+
+  if (isEditing) {
+    const v = validateEdits(post.id);
+    const canSave = isDirty(post.id) && v.ok;
+    return `
+    <div class="post-actions">
+      <div style="flex:1; min-width: 200px">
+        <div class="validation-msg">${v.errors.length ? v.errors.map(escHtml).join(' · ') : ''}</div>
+      </div>
+      <div class="action-btns">
+        ${hasEdits ? `<button class="btn-revert-edits" onclick="revertEdits('${post.id}')">↺ Revert all edits</button>` : ''}
+        <button class="btn-cancel-edit" onclick="cancelEdit('${post.id}')">Cancel</button>
+        <button class="btn-save-edits" onclick="saveEdits('${post.id}')" ${canSave ? '' : 'disabled'}>Save edits</button>
+        <button class="btn-approve" onclick="approvePost('${post.id}')">✓ Approve</button>
+      </div>
+    </div>`;
+  }
+
+  if (isActionable || isRejected) {
+    return `
+    <div class="post-actions">
+      <div class="notes-field">
+        <label>Notes for Bas (optional — saved if you reject)</label>
+        <textarea id="notes-${post.id}" placeholder="e.g. Too product-focused, needs more educational angle. Try a stat-led hook."></textarea>
+      </div>
+      <div class="action-btns">
+        ${hasEdits ? `<button class="btn-view-original" onclick="toggleViewOriginal('${post.id}')">${state.viewOriginal ? 'View edited' : 'View original'}</button>` : ''}
+        <button class="btn-edit-toggle" onclick="enterEditMode('${post.id}')">✎ Edit</button>
+        <button class="btn-approve" onclick="approvePost('${post.id}')">✓ Approve</button>
+        <button class="btn-reject" onclick="rejectPost('${post.id}')">✕ Reject</button>
+      </div>
+    </div>`;
+  }
+
+  return `
   <div class="post-actions" style="padding:12px 24px;">
-    <span style="font-size:12px;color:var(--gray-400)">
+    <span style="font-size:12px;color:var(--gray-400);flex:1">
       ${post.status === 'scheduled' ? '⏰ Scheduled for LinkedIn via HubSpot' :
         post.status === 'published' ? '🟢 Published on LinkedIn' :
         ''}
     </span>
+    ${hasEdits ? `<button class="btn-view-original" onclick="toggleViewOriginal('${post.id}')">${state.viewOriginal ? 'View edited' : 'View original'}</button>` : ''}
     ${post.status !== 'published' ? `<button class="btn-sm" onclick="undoAction('${post.id}')">↩ Undo</button>` : ''}
-  </div>`}
-</div>`;
+  </div>`;
 }
 
 // ── APPROVE / REJECT ─────────────────────────────────────────────────────
 
-async function approvePost(id) {
+async function approvePost(id, opts = {}) {
+  if (!opts.skipDirtyCheck && isDirty(id)) {
+    showApprovalModal(id);
+    return;
+  }
+
+  delete editStates[id];   // exit any edit/view-original state on successful approve
+
   const notes = document.getElementById(`notes-${id}`)?.value || '';
 
   try {
