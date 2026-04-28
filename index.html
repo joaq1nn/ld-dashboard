@@ -1396,7 +1396,7 @@ async function loadDrafts() {
       `select=*&order=post_number.asc&week_commencing=gte.${weekStr}`);
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    allPosts = await res.json();
+    allPosts = (await res.json()).filter(p => p.status !== 'archived');
     setDbStatus(true);
 
     // Update week label
