@@ -487,6 +487,16 @@
       display: block;
     }
 
+    .visual-rendered {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
     .visual-link {
       display: block;
       margin-top: 8px;
@@ -1574,8 +1584,9 @@ function renderDisplayBody(post, display, hasVisual) {
     <div class="post-visual-section">
       <div class="visual-label">Visual Asset</div>
       ${hasVisual
-        ? `<img src="${escHtml(post.visual_url)}" class="visual-image" alt="Post visual" onerror="this.style.display='none'" />
-           <a href="${escHtml(post.visual_url)}" target="_blank" class="visual-link">↗ Open in Canva / Drive</a>`
+        ? `<div class="section-label">Generated visual</div>
+           <img src="${escHtml(post.visual_url)}?t=${Date.now()}" class="visual-rendered" alt="Post visual" onerror="this.style.display='none'" />
+           <a href="${escHtml(post.visual_url)}" target="_blank" class="visual-link">↗ Open full size</a>`
         : `<div class="visual-placeholder">
              <div class="vp-logo">LEGIONELLA DOSSIER</div>
              <div class="vp-title">${escHtml((display.hook_line || '').slice(0, 60))}</div>
