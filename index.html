@@ -114,6 +114,29 @@
 
     #config-banner.hidden { display: none; }
 
+    /* ── MARKET BANNER ──────────────────────────────────────── */
+    #market-banner {
+      padding: 10px 32px;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    #market-banner .market-banner-meta {
+      font-weight: 400;
+      opacity: 0.8;
+    }
+    #market-banner.market-banner-uk {
+      background: var(--navy);
+      color: white;
+    }
+    #market-banner.market-banner-es {
+      background: linear-gradient(90deg, #c2410c, #ea580c);
+      color: white;
+    }
+
     /* ── CONFIG PANEL ───────────────────────────────────────── */
     #config-panel {
       background: var(--white);
@@ -919,6 +942,12 @@
   </div>
 </header>
 
+<!-- MARKET BANNER -->
+<div id="market-banner">
+  <span class="market-banner-label"></span>
+  <span class="market-banner-meta"></span>
+</div>
+
 <!-- CONFIG BANNER -->
 <div id="config-banner">
   ⚠️ <strong>Setup required:</strong> Enter your Supabase URL and anon key below to connect to your data.
@@ -1022,6 +1051,18 @@
 const DEFAULT_SUPABASE_URL = 'https://rlgfoqfusntfdkutnapx.supabase.co';
 const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZ2ZvcWZ1c250ZmRrdXRuYXB4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0NTI2MjEsImV4cCI6MjA5MDAyODYyMX0.FTatSQy1qtugUwsMKEI6HvTlFGlXuTP2kTV_d_IiNCk';
 
+// ── MARKET CONTEXT ────────────────────────────────────────────
+const _URL_PARAMS = new URLSearchParams(window.location.search);
+const _RAW_MARKET = (_URL_PARAMS.get('market') || 'UK').toUpperCase();
+const CURRENT_MARKET = ['UK', 'ES'].includes(_RAW_MARKET) ? _RAW_MARKET : 'UK';
+// UK mode accepts target_market=NULL OR 'UK' — historical UK drafts
+// carry NULL until the backfill runs. Same transitional pattern as the
+// agent's _load_rejected_drafts.
+const MARKET_FILTER =
+  CURRENT_MARKET === 'UK'
+    ? 'or=(target_market.is.null,target_market.eq.UK)'
+    : 'target_market=eq.ES';
+
 let SUPABASE_URL = '';
 let SUPABASE_KEY = '';
 let allPosts = [];
@@ -1095,8 +1136,12 @@ async function sbFetch(table, params = '') {
 }
 
 async function sbPatch(table, id, body) {
-  const url = `${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`;
-  return fetch(url, {
+  // Layer B: market filter applied at the DB level for content_drafts.
+  // If the row's target_market doesn't match CURRENT_MARKET, the UPDATE
+  // affects zero rows — atomic guard against cross-market writes.
+  const marketGuard = (table === 'content_drafts') ? `&${MARKET_FILTER}` : '';
+  const url = `${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}${marketGuard}`;
+  const res = await fetch(url, {
     method: 'PATCH',
     headers: {
       'apikey': SUPABASE_KEY,
@@ -1106,6 +1151,21 @@ async function sbPatch(table, id, body) {
     },
     body: JSON.stringify(body)
   });
+
+  // Layer C: if Supabase returned 200 OK with [], the filter excluded
+  // the row — surface that as a hard error instead of a silent no-op.
+  if (res.ok && table === 'content_drafts') {
+    const updated = await res.clone().json();
+    if (!Array.isArray(updated) || updated.length === 0) {
+      toast(
+        `⚠ Cross-market write blocked at DB. id=${id.slice(0,8)}… market=${CURRENT_MARKET}.`,
+        'error'
+      );
+      throw new Error(`cross-market write blocked: ${CURRENT_MARKET}/${id}`);
+    }
+  }
+
+  return res;
 }
 
 async function sbInsert(table, body) {
@@ -1138,6 +1198,27 @@ function effective(post) {
     if (post[`bas_edited_${f}`] != null) out[f] = post[`bas_edited_${f}`];
   }
   return out;
+}
+
+// ── MARKET WRITE GUARD (layer A: in-memory fast-fail) ─────────
+function postMatchesCurrentMarket(post) {
+  if (!post) return false;
+  if (CURRENT_MARKET === 'UK') {
+    return post.target_market == null || post.target_market === 'UK';
+  }
+  return post.target_market === CURRENT_MARKET;
+}
+
+function assertWriteAllowed(id) {
+  const post = allPosts.find(p => p.id === id);
+  if (!postMatchesCurrentMarket(post)) {
+    toast(
+      `⚠ Blocked: draft ${id.slice(0,8)}… is not in the ${CURRENT_MARKET} view.`,
+      'error'
+    );
+    return false;
+  }
+  return true;
 }
 
 function getEditorEmail() {
@@ -1248,6 +1329,7 @@ function validateEdits(id) {
 }
 
 async function saveEdits(id) {
+  if (!assertWriteAllowed(id)) return;
   const v = validateEdits(id);
   if (!v.ok) { toast('Fix validation errors first.', 'error'); return; }
   if (!isDirty(id)) return;
@@ -1279,6 +1361,7 @@ async function saveEdits(id) {
 }
 
 async function revertEdits(id) {
+  if (!assertWriteAllowed(id)) return;
   if (!confirm("Revert all edits to the agent's original?")) return;
   const body = {
     bas_edited_copy_text: null,
@@ -1403,7 +1486,7 @@ async function loadDrafts() {
     const weekStr = monday.toISOString().split('T')[0];
 
     const res = await sbFetch('content_drafts',
-      `select=*&order=post_number.asc&week_commencing=gte.${weekStr}`);
+      `select=*&order=post_number.asc&week_commencing=gte.${weekStr}&${MARKET_FILTER}`);
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     allPosts = (await res.json()).filter(p => p.status !== 'archived');
@@ -1756,6 +1839,7 @@ function renderActions(post, state, isActionable, isRejected, hasEdits) {
 // ── APPROVE / REJECT ─────────────────────────────────────────────────────
 
 async function approvePost(id, opts = {}) {
+  if (!assertWriteAllowed(id)) return;
   if (!opts.skipDirtyCheck && isDirty(id)) {
     showApprovalModal(id);
     return;
@@ -1784,6 +1868,7 @@ async function approvePost(id, opts = {}) {
 }
 
 async function rejectPost(id) {
+  if (!assertWriteAllowed(id)) return;
   const notes = document.getElementById(`notes-${id}`)?.value || '';
 
   if (!notes) {
@@ -1822,6 +1907,7 @@ async function rejectPost(id) {
 }
 
 async function undoAction(id) {
+  if (!assertWriteAllowed(id)) return;
   try {
     await sbPatch('content_drafts', id, { status: 'ready_for_review', bas_notes: null });
     toast('Post reset to "Ready for Review"');
@@ -1881,6 +1967,19 @@ function escAttr(str) {
 
 // ── INIT ─────────────────────────────────────────────────────────────────
 
+function initMarketBanner() {
+  const cfg = {
+    UK: { label: 'Reviewing: UK', meta: 'Legionella Dossier · Bas' },
+    ES: { label: 'Revisando: ES',  meta: 'BriqSafe · Joaquin' },
+  }[CURRENT_MARKET];
+  const banner = document.getElementById('market-banner');
+  if (!banner || !cfg) return;
+  banner.classList.add(`market-banner-${CURRENT_MARKET.toLowerCase()}`);
+  banner.querySelector('.market-banner-label').textContent = cfg.label;
+  banner.querySelector('.market-banner-meta').textContent  = cfg.meta;
+}
+
+initMarketBanner();
 loadConfig();
 </script>
 </body>
